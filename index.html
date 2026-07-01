@@ -80,6 +80,15 @@ h1{font-family:'Barlow Semi Condensed','Barlow',sans-serif;font-weight:700;
 .lvl{flex:0 0 auto;width:42px;height:42px;border-radius:11px;display:grid;place-items:center;
   font-family:'Barlow Semi Condensed',sans-serif;font-weight:700;font-size:15px;
   background:color-mix(in srgb,var(--accent) 13%,#fff);color:var(--accent)}
+.lvl svg{width:22px;height:22px}
+.nivelcard{flex-direction:row;align-items:flex-start;gap:12px;min-height:0}
+.nivelcard .nbadge{width:40px;height:40px;border-radius:11px;flex:0 0 auto;display:grid;place-items:center;
+  background:color-mix(in srgb,var(--accent) 13%,#fff);color:var(--accent)}
+.nivelcard .nbadge svg{width:22px;height:22px}
+.nivelcard .meta{display:flex;flex-direction:column;gap:5px;min-width:0;flex:1}
+.nivelcard .cargos{font-weight:600;font-size:13.5px;color:var(--pine);line-height:1.45}
+.nivelcard .hint{font-size:11.5px;color:var(--ink-500);font-weight:600}
+.nivelcard .chev{margin-top:6px;color:var(--ink-400);flex:0 0 auto}
 .roles .meta{display:flex;flex-direction:column;gap:1px;min-width:0}
 .roles .c-name{font-size:16px}
 .chev{margin-left:auto;color:var(--ink-400);flex:0 0 auto}
@@ -174,6 +183,12 @@ textarea:focus,input[type=text]:focus{outline:none;border-color:var(--accent);
 .q.invalid textarea, .q.invalid input[type=text]{border-color:var(--red)}
 .survey-note{font-size:13px;color:var(--ink-500);font-weight:600;background:color-mix(in srgb,var(--gold) 14%,#fff);
   border:1px solid color-mix(in srgb,var(--gold-deep) 35%,#fff);border-radius:11px;padding:10px 13px;margin:0 0 4px}
+.anon{background:color-mix(in srgb,var(--green) 9%,#fff);border:1px solid color-mix(in srgb,var(--green) 28%,#fff);
+  border-radius:14px;padding:14px 16px;margin:24px 0 4px;display:flex;flex-direction:column;gap:4px}
+.anon-t{display:inline-flex;align-items:center;gap:8px;font-family:'Barlow Semi Condensed',sans-serif;font-weight:700;
+  font-size:15px;color:var(--green);text-transform:uppercase;letter-spacing:.4px}
+.anon-t::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--green);flex:0 0 auto}
+.anon-d{margin:0;font-size:14px;color:var(--ink-700);font-weight:500;line-height:1.45}
 </style>
 </head>
 <body>
@@ -185,34 +200,29 @@ textarea:focus,input[type=text]:focus{outline:none;border-color:var(--accent);
     </span>
     <div>
       <div class="brand-t">Cultiva</div>
-      <div class="brand-s">Tu opinión cuenta</div>
+      <div class="brand-s">Encuesta anónima</div>
     </div>
-    <div class="crumb" id="crumb"></div>
   </div>
   <div class="rail"><i id="railFill"></i></div>
 </header>
 
 <main class="wrap">
 
-  <!-- PASO 1 · ÁREA -->
-  <section class="screen on" id="s-area" aria-labelledby="t-area">
-    <span class="eyebrow"><span class="dot"></span>Paso 1 de 3</span>
-    <h1 id="t-area">¿A qué área perteneces?</h1>
-    <p class="lead">Selecciona un área para revisar sus rituales.</p>
-    <div class="cards areas" id="areaCards" role="list"></div>
+  <!-- PASO 1 · NIVEL -->
+  <section class="screen on" id="s-nivel" aria-labelledby="t-nivel">
+    <div class="anon">
+      <div class="anon-t">Encuesta anónima</div>
+      <p class="anon-d">Tus respuestas son totalmente anónimas y confidenciales. Te agradecemos responder con total sinceridad.</p>
+    </div>
+    <span class="eyebrow"><span class="dot"></span>Paso 1 de 2</span>
+    <h1 id="t-nivel">¿Cuál es tu nivel?</h1>
+    <p class="lead">Selecciona tu nivel de liderazgo o jerarquía.</p>
+    <div class="cards" id="nivelCards" role="list"></div>
   </section>
 
-  <!-- PASO 2 · ROL -->
-  <section class="screen" id="s-role" aria-labelledby="t-role">
-    <span class="eyebrow"><span class="dot"></span>Paso 2 de 3</span>
-    <h1 id="t-role">¿Cuál es tu rol?</h1>
-    <p class="lead" id="role-lead">Solo evaluarás los rituales asignados a tu rol.</p>
-    <div class="cards roles" id="roleCards" role="list"></div>
-  </section>
-
-  <!-- PASO 3 · ENCUESTA -->
+  <!-- PASO 2 · ENCUESTA -->
   <section class="screen" id="s-survey" aria-labelledby="t-survey">
-    <span class="eyebrow"><span class="dot"></span>Paso 3 de 3</span>
+    <span class="eyebrow"><span class="dot"></span>Paso 2 de 2</span>
     <h1 id="t-survey">Cuéntanos cómo te va</h1>
     <p class="lead" id="survey-lead"></p>
     <p class="survey-note">Responde todas las preguntas para poder enviar. Solo puedes dejar en blanco las marcadas como <b>opcional</b>.</p>
@@ -253,11 +263,11 @@ textarea:focus,input[type=text]:focus{outline:none;border-color:var(--accent);
       <div class="sec-h"><span class="sec-n">C</span><span class="sec-t">Mejoras y comodidad</span></div>
       <p class="sec-d">Lo que te ayudaría a aplicar los rituales con más confianza.</p>
       <div class="q" data-q="comodidad" data-type="text">
-        <label class="q-label" for="comodidad">¿Qué necesitas para sentirte más cómodo/a aplicando los rituales?</label>
+        <label class="q-label" for="comodidad">¿Hay algo que necesites para sentirte más cómodo/a aplicando los rituales?</label>
         <textarea id="comodidad" placeholder="Ej: más práctica, ejemplos, apoyo de mi jefe, menos pasos…"></textarea>
       </div>
       <div class="q" data-q="dificultad" data-type="multi">
-        <span class="q-label">¿Qué te dificulta aplicarlos? <span class="q-hint">Marca todas las que apliquen.</span></span>
+        <span class="q-label">¿Hay algo que te dificulte aplicar los rituales? <span class="q-hint">Marca todas las que apliquen.</span></span>
         <div class="chips" data-opts="Falta de tiempo|No me queda claro cómo|El equipo no responde bien|Problemas con el celular o la app|Me da vergüenza o incomodidad|Nada me lo dificulta|Otro"></div>
       </div>
       <div class="q" data-q="app_mejora" data-type="text">
@@ -325,25 +335,52 @@ const $  = (s,c=document)=>c.querySelector(s);
 const $$ = (s,c=document)=>[...c.querySelectorAll(s)];
 const ICON = p => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">'+p+'</svg>';
 
-let stepView = "area";
+// 4 niveles. Cada uno agrupa varios cargos y un set único de rituales.
+const NIVELES = [
+  { id:"nivel-1", nombre:"Gerentes / Subgerentes",
+    cargos:"Gerente / Subgerente",
+    rituals:[
+      {id:"feedback-1-1-mensual", title:"Feedback 1:1 Mensual"},
+      {id:"caminata-de-liderazgo", title:"Caminata de liderazgo"},
+      {id:"revisar-escaladas-diarias", title:"Revisar escaladas diarias"},
+      {id:"reconocimiento", title:"Reconocimiento"}
+    ]},
+  { id:"nivel-2", nombre:"Jefaturas",
+    cargos:"Jefe de Cosecha / Abastecimiento de Cosecha · Jefe de Planta / CAE · Jefe de Riego / Sanidad / Fertirriego · Jefe de Calidad",
+    rituals:[
+      {id:"feedback-1-1-mensual", title:"Feedback 1:1 Mensual"},
+      {id:"revisar-escaladas-diarias", title:"Revisar escaladas diarias"},
+      {id:"reconocimiento", title:"Reconocimiento"}
+    ]},
+  { id:"nivel-3", nombre:"Jefes de producción, Coordinación y Supervisor de Fundo",
+    cargos:"Jefe de Producción Agrícola · Jefe de Producción Packing · Coordinador de Calidad / Sanidad / Riego / Abast. Cosecha · Supervisor de Fundo",
+    rituals:[
+      {id:"saludo-con-proposito", title:"Saludo con propósito"},
+      {id:"coaching-de-terreno", title:"Coaching de terreno"},
+      {id:"revisar-escaladas-diarias", title:"Revisar escaladas diarias"},
+      {id:"reconocimiento", title:"Reconocimiento"}
+    ]},
+  { id:"nivel-4", nombre:"Supervisores, Líder de Cosecha, TAC y Control",
+    cargos:"Supervisor de Calidad / Riego / Sanidad · Líder de Cosecha · Sup. de Producción Agrícola · Sup. Producción Packing · TAC · Control",
+    rituals:[
+      {id:"saludo-con-proposito", title:"Saludo con propósito"},
+      {id:"escucha-antes-de-empezar", title:"Escucha antes de empezar"},
+      {id:"reconocimiento", title:"Reconocimiento"},
+      {id:"cierre-con-agradecimiento", title:"Cierre con agradecimiento"}
+    ]}
+];
+
+let stepView = "nivel";
 function show(view){
   stepView = view;
   $$(".screen").forEach(s=>s.classList.remove("on"));
   $("#s-"+view).classList.add("on");
-  const railMap = {area:18, role:52, survey:88, done:100};
-  $("#railFill").style.width = railMap[view]+"%";
+  const railMap = {nivel:22, survey:85, done:100};
+  $("#railFill").style.width = (railMap[view]||0)+"%";
   const bar = $("#actionbar");
   if(view==="survey"){ bar.style.display="block"; $("#nextBtn").textContent="Enviar mis respuestas"; $("#nextBtn").disabled=false; }
-  else if(view==="role"){ bar.style.display="block"; $("#nextBtn").textContent="Continuar"; $("#nextBtn").disabled=!state.role; }
   else { bar.style.display="none"; }
   window.scrollTo({top:0,behavior:"smooth"});
-  updateCrumb();
-}
-function updateCrumb(){
-  const c=$("#crumb"); if(!state.area){c.innerHTML="";return;}
-  let t = state.area.label;
-  if(state.role) t += " · <b>"+state.role.role+"</b>";
-  c.innerHTML = t;
 }
 function setAccent(hex){
   document.documentElement.style.setProperty("--accent",hex);
@@ -351,36 +388,18 @@ function setAccent(hex){
   document.documentElement.style.setProperty("--accent-ink", dark ? "#1B2420":"#FFFFFF");
 }
 
-function renderAreas(){
-  const host=$("#areaCards");
-  host.innerHTML = CULTIVA.areas.map(a=>{
-    const st=AREA_STYLE[a.id];
-    return '<button class="card" role="listitem" data-area="'+a.id+'" style="--ca:'+st.color+'">'+
-      '<span class="c-ic">'+ICON(st.icon)+'</span>'+
-      '<span class="c-name">'+a.label.toUpperCase()+'</span>'+
-      '<span class="c-sub">'+a.roles.length+' roles</span></button>';
-  }).join("");
-  $$(".card",host).forEach(b=>b.addEventListener("click",()=>{
-    state.area = CULTIVA.areas.find(a=>a.id===b.dataset.area);
-    state.role=null; setAccent(AREA_STYLE[state.area.id].color);
-    renderRoles(); show("role");
-  }));
-}
-
-function renderRoles(){
-  $("#role-lead").textContent = "Área "+state.area.label+". Solo evaluarás los rituales asignados a tu rol.";
-  const host=$("#roleCards");
-  host.innerHTML = state.area.roles.map(r=>
-    '<button class="card" role="listitem" data-pid="'+r.pid+'">'+
-      '<span class="lvl">'+r.level+'</span>'+
-      '<span class="meta"><span class="c-name">'+r.role+'</span>'+
-      '<span class="c-sub">'+r.sub+' · '+r.rituals.length+' rituales</span></span>'+
+function renderNiveles(){
+  setAccent("#045E46"); // verde Cultiva uniforme
+  const host=$("#nivelCards");
+  host.innerHTML = NIVELES.map(n=>
+    '<button class="card nivelcard" role="listitem" data-id="'+n.id+'">'+
+      '<span class="nbadge">'+ICON('<path d="M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z"/><path d="M5 21a7 7 0 0 1 14 0"/>')+'</span>'+
+      '<span class="meta"><span class="cargos">'+n.cargos+'</span>'+
+      '<span class="hint">Toca para responder los rituales de este nivel</span></span>'+
       '<span class="chev" aria-hidden="true">'+ICON('<path d="m9 18 6-6-6-6"/>')+'</span></button>').join("");
   $$(".card",host).forEach(b=>b.addEventListener("click",()=>{
-    $$(".card",host).forEach(x=>x.classList.remove("sel"));
-    b.classList.add("sel");
-    state.role = state.area.roles.find(r=>r.pid===b.dataset.pid);
-    $("#nextBtn").disabled=false; updateCrumb();
+    state.nivel = NIVELES.find(n=>n.id===b.dataset.id);
+    buildSurveyControls(); renderRituals(); show("survey");
   }));
 }
 
@@ -425,9 +444,9 @@ function buildSurveyControls(){
 }
 
 function renderRituals(){
-  $("#survey-lead").textContent = state.role.role+" — "+state.area.label+". Estos son tus "+state.role.rituals.length+" rituales.";
+  $("#survey-lead").textContent = "Estos son los "+state.nivel.rituals.length+" rituales de tu nivel.";
   const host=$("#ritualList");
-  host.innerHTML = state.role.rituals.map((r,i)=>
+  host.innerHTML = state.nivel.rituals.map((r,i)=>
     '<details class="ritual" data-rid="'+r.id+'">'+
       '<summary><span class="r-no">'+(i+1)+'</span><span class="r-name">'+r.title+'</span>'+
       '<span class="r-state" data-state>Sin responder</span></summary>'+
@@ -498,7 +517,7 @@ function validate(){
   if(!(state.answers.app_emocion && state.answers.app_emocion.length)) flagQ($('.q[data-q="app_emocion"]'),missing);
 
   // Sección B — rituales (mejora es opcional)
-  state.role.rituals.forEach(r=>{
+  state.nivel.rituals.forEach(r=>{
     const det=$('.ritual[data-rid="'+r.id+'"]'); if(!det) return;
     const a=state.rituals[r.id]||{}; let falta=false;
     if(!a.aplicado){ flagQ(det.querySelector('.rq[data-rk="aplicado"]'),missing); falta=true; }
@@ -528,12 +547,12 @@ function validate(){
 function buildRecord(){
   return {
     enviado_en:new Date().toISOString(), duracion_seg:Math.round((Date.now()-state.started)/1000),
-    area:state.area.label, area_id:state.area.id,
-    rol:state.role.role, rol_nivel:state.role.level, rol_id:state.role.pid,
+    area:"", area_id:"",
+    rol:state.nivel.nombre, rol_nivel:state.nivel.id, rol_id:state.nivel.id,
     app:{ facilidad:state.answers.app_facil??"", utilidad:state.answers.app_util??"",
       nps:state.answers.app_nps??"", facilita:state.answers.app_facilita??"",
       como_se_sintio:state.answers.app_emocion??[] },
-    rituales:state.role.rituals.map(r=>({ ritual:r.title, ritual_id:r.id,
+    rituales:state.nivel.rituals.map(r=>({ ritual:r.title, ritual_id:r.id,
       aplicado:state.rituals[r.id]?.aplicado??"", claridad:state.rituals[r.id]?.claridad??"",
       facilidad:state.rituals[r.id]?.facilidad??"", valor:state.rituals[r.id]?.valor??"",
       mejora:state.rituals[r.id]?.mejora??"", impedimento:state.rituals[r.id]?.impedimento??"" })),
@@ -575,7 +594,7 @@ async function submit(){
 function download(){
   const blob=new Blob(["\uFEFF"+toCSV(lastRecord)],{type:"text/csv;charset=utf-8"});
   const a=document.createElement("a");a.href=URL.createObjectURL(blob);
-  a.download="cultiva_"+state.role.pid+"_"+Date.now()+".csv";a.click(); toast("Archivo descargado");
+  a.download="cultiva_"+state.nivel.id+"_"+Date.now()+".csv";a.click(); toast("Archivo descargado");
 }
 async function copyAns(){
   try{ await navigator.clipboard.writeText(JSON.stringify(lastRecord,null,2)); toast("Respuestas copiadas"); }
@@ -585,16 +604,13 @@ let toastT;
 function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show");
   clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove("show"),2200); }
 
-$("#backBtn").addEventListener("click",()=>{ if(stepView==="survey") show("role"); else if(stepView==="role") show("area"); });
-$("#nextBtn").addEventListener("click",()=>{
-  if(stepView==="role"){ if(!state.role){toast("Elige tu rol");return;} buildSurveyControls(); renderRituals(); show("survey"); }
-  else if(stepView==="survey"){ submit(); }
-});
+$("#backBtn").addEventListener("click",()=>{ if(stepView==="survey") show("nivel"); });
+$("#nextBtn").addEventListener("click",()=>{ if(stepView==="survey") submit(); });
 $("#dlBtn").addEventListener("click",download);
 $("#cpBtn").addEventListener("click",copyAns);
 
-renderAreas();
-show("area");
+renderNiveles();
+show("nivel");
 </script>
 </body>
 </html>
