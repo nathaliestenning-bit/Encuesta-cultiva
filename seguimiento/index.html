@@ -409,6 +409,7 @@
             <span>Otro</span>
           </label>
           <input type="text" class="other-input" id="otroTexto" placeholder="Especifica aquí..." style="display:none;">
+          <div class="error-msg" data-error-for="tipo_acompanamiento">Por favor selecciona al menos una opción.</div>
         </div>
       </div>
 
@@ -491,6 +492,12 @@
       document.querySelectorAll(`input[name="${name}"]`).forEach(sibling => {
         sibling.closest('.opt').classList.toggle('checked', sibling.checked);
       });
+      if (name === 'tipo_acompanamiento') {
+        const errorEl = document.querySelector('[data-error-for="tipo_acompanamiento"]');
+        if (form.querySelectorAll('input[name="tipo_acompanamiento"]:checked').length > 0) {
+          errorEl.style.display = 'none';
+        }
+      }
     });
   });
 
@@ -511,6 +518,14 @@
     if (!form.querySelector('input[name="necesita_acompanamiento"]:checked')) {
       document.querySelector('[data-error-for="necesita_acompanamiento"]').style.display = 'block';
       valid = false;
+    }
+    const necesitaAcomp = form.querySelector('input[name="necesita_acompanamiento"]:checked');
+    if (necesitaAcomp && necesitaAcomp.value === 'Sí') {
+      const algunoMarcado = form.querySelectorAll('input[name="tipo_acompanamiento"]:checked').length > 0;
+      if (!algunoMarcado) {
+        document.querySelector('[data-error-for="tipo_acompanamiento"]').style.display = 'block';
+        valid = false;
+      }
     }
     return valid;
   }
