@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Encuesta de Seguimiento · Cultiva</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Semi+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pine: #1f4d3d;
+    --pine-dark: #143329;
+    --pine-light: #e7f0ec;
+    --accent: #c7a24a;
+    --ink: #22322b;
+    --muted: #6b7a73;
+    --bg: #f4f6f4;
+    --card: #ffffff;
+    --danger: #b5482f;
+    --radius: 14px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Barlow', sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    padding:0 0 60px;
+  }
+  header{
+    background:linear-gradient(135deg, var(--pine) 0%, var(--pine-dark) 100%);
+    color:#fff;
+    padding:36px 20px 46px;
+    text-align:center;
+  }
+  header h1{
+    font-family:'Barlow Semi Condensed', sans-serif;
+    font-weight:700;
+    font-size:26px;
+    margin:0 0 6px;
+    letter-spacing:.3px;
+  }
+  header p{
+    margin:0;
+    font-size:14px;
+    opacity:.85;
+    max-width:480px;
+    margin:0 auto;
+  }
+  .wrap{
+    max-width:560px;
+    margin:-26px auto 0;
+    padding:0 16px;
+  }
+  .card{
+    background:var(--card);
+    border-radius:var(--radius);
+    padding:22px 20px;
+    margin-bottom:16px;
+    box-shadow:0 2px 10px rgba(20,51,41,.08);
+  }
+  .notice{
+    background:var(--pine-light);
+    border:1px solid #c9ddd3;
+    color:var(--pine-dark);
+    border-radius:var(--radius);
+    padding:16px 18px;
+    font-size:13.5px;
+    line-height:1.5;
+    margin-bottom:18px;
+    display:flex;
+    gap:10px;
+  }
+  .notice svg{flex:0 0 20px; margin-top:2px;}
+  .q-label{
+    font-weight:600;
+    font-size:15.5px;
+    margin-bottom:4px;
+    display:block;
+  }
+  .q-sub{
+    font-size:12.5px;
+    color:var(--muted);
+    margin-bottom:14px;
+  }
+  .required{color:var(--danger); font-weight:600;}
+
+  /* Progress steps */
+  .progress{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    margin-bottom:16px;
+  }
+  .progress .dot{
+    width:8px;height:8px;border-radius:50%;
+    background:#cddad2;
+    transition:.2s;
+  }
+  .progress .dot.active{
+    background:#fff;
+    width:22px;
+    border-radius:5px;
+  }
+
+  /* Nivel selector as stacked rows */
+  .nivel-list{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .nivel-option{
+    position:relative;
+  }
+  .nivel-option input{
+    position:absolute;
+    opacity:0;
+    width:100%;
+    height:100%;
+    margin:0;
+    cursor:pointer;
+  }
+  .nivel-card{
+    border:2px solid #e1e6e3;
+    border-radius:10px;
+    padding:14px 16px;
+    transition:.15s;
+  }
+  .nivel-card .desc{
+    font-size:13.5px;
+    color:var(--ink);
+    line-height:1.45;
+  }
+  .nivel-option input:checked + .nivel-card{
+    border-color:var(--pine);
+    background:var(--pine-light);
+  }
+
+  /* Scale 1-5 */
+  .scale-row{
+    display:flex;
+    gap:8px;
+    justify-content:space-between;
+  }
+  .scale-option{
+    flex:1;
+    position:relative;
+  }
+  .scale-option input{
+    position:absolute;
+    opacity:0;
+    width:100%;
+    height:100%;
+    margin:0;
+    cursor:pointer;
+  }
+  .scale-btn{
+    border:2px solid #e1e6e3;
+    border-radius:10px;
+    padding:12px 0;
+    text-align:center;
+    font-weight:600;
+    color:var(--pine-dark);
+    transition:.15s;
+  }
+  .scale-option input:checked + .scale-btn{
+    border-color:var(--pine);
+    background:var(--pine);
+    color:#fff;
+  }
+  .scale-caption{
+    display:flex;
+    justify-content:space-between;
+    font-size:11px;
+    color:var(--muted);
+    margin-top:6px;
+  }
+
+  /* Radio / checkbox list */
+  .opt{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    border:2px solid #e1e6e3;
+    border-radius:10px;
+    padding:12px 14px;
+    margin-bottom:8px;
+    cursor:pointer;
+    transition:.15s;
+  }
+  .opt input{
+    width:18px;
+    height:18px;
+    accent-color:var(--pine);
+    flex:0 0 18px;
+  }
+  .opt span{
+    font-size:14.5px;
+  }
+  .opt.checked{
+    border-color:var(--pine);
+    background:var(--pine-light);
+  }
+  .other-input{
+    width:100%;
+    margin-top:6px;
+    padding:10px 12px;
+    border:2px solid #e1e6e3;
+    border-radius:10px;
+    font-family:'Barlow', sans-serif;
+    font-size:14px;
+  }
+  .other-input:focus{outline:none; border-color:var(--pine);}
+
+  #conditional-block{
+    display:none;
+    margin-top:16px;
+    padding-top:16px;
+    border-top:1px dashed #d8ded9;
+  }
+
+  .btn{
+    width:100%;
+    border:none;
+    padding:16px;
+    border-radius:12px;
+    font-family:'Barlow', sans-serif;
+    font-weight:600;
+    font-size:16px;
+    cursor:pointer;
+    transition:.15s;
+  }
+  .btn-primary{
+    background:var(--pine);
+    color:#fff;
+  }
+  .btn-primary:hover{background:var(--pine-dark);}
+  .btn-primary:disabled{opacity:.5; cursor:not-allowed;}
+  .btn-secondary{
+    background:transparent;
+    color:var(--pine-dark);
+    border:2px solid #e1e6e3;
+    margin-top:10px;
+  }
+  .btn-secondary:hover{border-color:var(--pine);}
+
+  .error-msg{
+    color:var(--danger);
+    font-size:12.5px;
+    margin-top:6px;
+    display:none;
+  }
+
+  .step{display:none;}
+  .step.active{display:block;}
+
+  #successView{
+    display:none;
+    text-align:center;
+    padding:40px 20px;
+  }
+  #successView .check{
+    width:64px;height:64px;
+    border-radius:50%;
+    background:var(--pine-light);
+    display:flex;align-items:center;justify-content:center;
+    margin:0 auto 16px;
+  }
+  #successView h2{
+    font-family:'Barlow Semi Condensed', sans-serif;
+    color:var(--pine-dark);
+    margin:0 0 8px;
+  }
+  #successView p{color:var(--muted); font-size:14px;}
+
+  .footer-note{
+    text-align:center;
+    font-size:11.5px;
+    color:var(--muted);
+    margin-top:10px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Encuesta de Seguimiento · Cultiva</h1>
+  <p>Tu opinión nos ayuda a mejorar la forma en que aplicamos los rituales de liderazgo.</p>
+  <div class="progress">
+    <div class="dot active" id="dot1"></div>
+    <div class="dot" id="dot2"></div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="notice">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" fill="#1f4d3d"/></svg>
+    <div>Esta encuesta es <strong>totalmente anónima</strong>. No se solicita tu nombre ni ningún dato que te identifique — solo tu grupo de cargo, para entender mejor los resultados por grupo.</div>
+  </div>
+
+  <form id="surveyForm">
+
+    <!-- STEP 1: NIVEL -->
+    <div class="step active" id="step1">
+      <div class="card">
+        <span class="q-label">¿Cuál es tu cargo? <span class="required">*</span></span>
+        <div class="q-sub">Selecciona el grupo que incluye tu cargo actual.</div>
+        <div class="nivel-list">
+          <label class="nivel-option">
+            <input type="radio" name="nivel" value="Gerente/Subgerente" required>
+            <div class="nivel-card">
+              <div class="desc">Gerente/Subgerente</div>
+            </div>
+          </label>
+          <label class="nivel-option">
+            <input type="radio" name="nivel" value="Jefe de Cosecha/Abastecimiento de Cosecha, Jefe de Planta/CAE, Jefe de Riego/Sanidad/Fertirriego, Jefe de Calidad">
+            <div class="nivel-card">
+              <div class="desc">Jefe de Cosecha/Abastecimiento de Cosecha, Jefe de Planta/CAE, Jefe de Riego /Sanidad/ Fertirriego, Jefe Calidad</div>
+            </div>
+          </label>
+          <label class="nivel-option">
+            <input type="radio" name="nivel" value="Jefe de Produccion agrícola, Jefe de Producción Packing, Coordinador de Calidad/Sanidad/Riego/Abast. Cosecha, Supervisor de Fundo">
+            <div class="nivel-card">
+              <div class="desc">Jefe de Produccion agrícola, Jefe de Producción Packing, Coordinador de Calidad/Sanidad/Riego/Abast. Cosecha, Supervisor de Fundo</div>
+            </div>
+          </label>
+          <label class="nivel-option">
+            <input type="radio" name="nivel" value="Supervisor de Calidad/Riego/Sanidad, Lider de Cosecha, Super. de Producción Agrícola, Sup. Producción Packing, TAC, Control">
+            <div class="nivel-card">
+              <div class="desc">Supervisor de Calidad/Riego/Sanidad, Lider de Cosecha, Super. de Producción Agrícola, Sup. Producción Packing, TAC, Control</div>
+            </div>
+          </label>
+        </div>
+        <div class="error-msg" data-error-for="nivel">Por favor selecciona una opción.</div>
+      </div>
+
+      <button type="button" class="btn btn-primary" id="nextBtn">Continuar</button>
+    </div>
+
+    <!-- STEP 2: PREGUNTAS -->
+    <div class="step" id="step2">
+
+      <div class="card">
+        <span class="q-label">1. ¿Qué tan práctico y útil te resultó el manual físico? <span class="required">*</span></span>
+        <div class="q-sub">Marca del 1 al 5.</div>
+        <div class="scale-row" id="scaleRow">
+          <label class="scale-option"><input type="radio" name="utilidad_manual" value="1"><div class="scale-btn">1</div></label>
+          <label class="scale-option"><input type="radio" name="utilidad_manual" value="2"><div class="scale-btn">2</div></label>
+          <label class="scale-option"><input type="radio" name="utilidad_manual" value="3"><div class="scale-btn">3</div></label>
+          <label class="scale-option"><input type="radio" name="utilidad_manual" value="4"><div class="scale-btn">4</div></label>
+          <label class="scale-option"><input type="radio" name="utilidad_manual" value="5"><div class="scale-btn">5</div></label>
+        </div>
+        <div class="scale-caption">
+          <span>Nada práctico</span>
+          <span>Muy práctico</span>
+        </div>
+        <div class="error-msg" data-error-for="utilidad_manual">Por favor marca una calificación.</div>
+      </div>
+
+      <div class="card">
+        <span class="q-label">2. Si tuvieses que quedarte con un solo formato para aplicar tus rituales, ¿con cuál te quedas? <span class="required">*</span></span>
+        <div id="formatoOptions">
+          <label class="opt">
+            <input type="radio" name="formato_preferido" value="Manual físico">
+            <span>Manual físico</span>
+          </label>
+          <label class="opt">
+            <input type="radio" name="formato_preferido" value="App Cultiva">
+            <span>App Cultiva</span>
+          </label>
+        </div>
+        <div class="error-msg" data-error-for="formato_preferido">Por favor selecciona una opción.</div>
+      </div>
+
+      <div class="card">
+        <span class="q-label">3. ¿Consideras que necesitas acompañamiento para hacer tus rituales? <span class="required">*</span></span>
+        <div id="acompOptions">
+          <label class="opt">
+            <input type="radio" name="necesita_acompanamiento" value="Sí">
+            <span>Sí</span>
+          </label>
+          <label class="opt">
+            <input type="radio" name="necesita_acompanamiento" value="No">
+            <span>No</span>
+          </label>
+        </div>
+        <div class="error-msg" data-error-for="necesita_acompanamiento">Por favor selecciona una opción.</div>
+
+        <div id="conditional-block">
+          <span class="q-label">¿Qué tipo de acompañamiento te sería más útil?</span>
+          <div class="q-sub">Puedes marcar más de una opción.</div>
+          <label class="opt">
+            <input type="checkbox" name="tipo_acompanamiento" value="Resolución de dudas y consultas por WhatsApp/llamada telefónica">
+            <span>Resolución de dudas y consultas por WhatsApp/llamada telefónica</span>
+          </label>
+          <label class="opt">
+            <input type="checkbox" name="tipo_acompanamiento" value="Acompañamiento presencial durante las primeras veces">
+            <span>Acompañamiento presencial durante las primeras veces</span>
+          </label>
+          <label class="opt">
+            <input type="checkbox" name="tipo_acompanamiento" value="Tutoriales/videos demostrativos">
+            <span>Tutoriales/videos demostrativos</span>
+          </label>
+          <label class="opt">
+            <input type="checkbox" name="tipo_acompanamiento" value="Otro" id="otroCheck">
+            <span>Otro</span>
+          </label>
+          <input type="text" class="other-input" id="otroTexto" placeholder="Especifica aquí..." style="display:none;">
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary" id="submitBtn">Enviar respuesta</button>
+      <button type="button" class="btn btn-secondary" id="backBtn">Atrás</button>
+      <div class="error-msg" id="generalError" style="text-align:center; margin-top:10px;">Ocurrió un problema al enviar. Intenta de nuevo.</div>
+    </div>
+
+    <div class="footer-note">Tus respuestas son anónimas y se usan únicamente para mejorar el programa Cultiva.</div>
+  </form>
+
+  <div id="successView">
+    <div class="check">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#1f4d3d" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <h2>¡Gracias por tu respuesta!</h2>
+    <p>Tu opinión anónima ha sido registrada correctamente.</p>
+  </div>
+
+</div>
+
+<script>
+  // ⚠️ Reemplaza esta URL con el endpoint de tu Google Apps Script Web App
+  const ENDPOINT_URL = "https://script.google.com/macros/s/AKfycbzDSd2f6RtnDSRhgIm-0g8VedNfYTGjydPCUUE9d9Sl_dZ4rVhNDkriiUTPFN2kgY-d/exec";
+
+  const form = document.getElementById('surveyForm');
+  const step1 = document.getElementById('step1');
+  const step2 = document.getElementById('step2');
+  const dot1 = document.getElementById('dot1');
+  const dot2 = document.getElementById('dot2');
+  const nextBtn = document.getElementById('nextBtn');
+  const backBtn = document.getElementById('backBtn');
+  const submitBtn = document.getElementById('submitBtn');
+  const generalError = document.getElementById('generalError');
+  const conditionalBlock = document.getElementById('conditional-block');
+  const otroCheck = document.getElementById('otroCheck');
+  const otroTexto = document.getElementById('otroTexto');
+
+  function goToStep2(){
+    if (!form.querySelector('input[name="nivel"]:checked')) {
+      document.querySelector('[data-error-for="nivel"]').style.display = 'block';
+      return;
+    }
+    document.querySelector('[data-error-for="nivel"]').style.display = 'none';
+    step1.classList.remove('active');
+    step2.classList.add('active');
+    dot1.classList.remove('active');
+    dot2.classList.add('active');
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  function goToStep1(){
+    step2.classList.remove('active');
+    step1.classList.add('active');
+    dot2.classList.remove('active');
+    dot1.classList.add('active');
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  nextBtn.addEventListener('click', goToStep2);
+  backBtn.addEventListener('click', goToStep1);
+
+  // Show/hide conditional block for pregunta 3
+  document.querySelectorAll('input[name="necesita_acompanamiento"]').forEach(radio => {
+    radio.addEventListener('change', (e) => {
+      conditionalBlock.style.display = e.target.value === 'Sí' ? 'block' : 'none';
+    });
+  });
+
+  // Show/hide "otro" text field
+  otroCheck.addEventListener('change', () => {
+    otroTexto.style.display = otroCheck.checked ? 'block' : 'none';
+    if (!otroCheck.checked) otroTexto.value = '';
+  });
+
+  // Visual feedback on .opt selection
+  document.querySelectorAll('.opt input').forEach(inp => {
+    inp.addEventListener('change', () => {
+      const name = inp.name;
+      document.querySelectorAll(`input[name="${name}"]`).forEach(sibling => {
+        sibling.closest('.opt').classList.toggle('checked', sibling.checked);
+      });
+    });
+  });
+
+  function clearErrors(){
+    document.querySelectorAll('.error-msg').forEach(el => el.style.display = 'none');
+  }
+
+  function validateStep2(){
+    let valid = true;
+    if (!form.querySelector('input[name="utilidad_manual"]:checked')) {
+      document.querySelector('[data-error-for="utilidad_manual"]').style.display = 'block';
+      valid = false;
+    }
+    if (!form.querySelector('input[name="formato_preferido"]:checked')) {
+      document.querySelector('[data-error-for="formato_preferido"]').style.display = 'block';
+      valid = false;
+    }
+    if (!form.querySelector('input[name="necesita_acompanamiento"]:checked')) {
+      document.querySelector('[data-error-for="necesita_acompanamiento"]').style.display = 'block';
+      valid = false;
+    }
+    return valid;
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    clearErrors();
+    if (!validateStep2()) return;
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Enviando...';
+    generalError.style.display = 'none';
+
+    const tipoAcompanamiento = Array.from(
+      form.querySelectorAll('input[name="tipo_acompanamiento"]:checked')
+    ).map(i => i.value === 'Otro' && otroTexto.value.trim()
+      ? `Otro: ${otroTexto.value.trim()}`
+      : i.value
+    );
+
+    const payload = {
+      nivel: form.querySelector('input[name="nivel"]:checked')?.value || '',
+      utilidad_manual: form.querySelector('input[name="utilidad_manual"]:checked')?.value || '',
+      formato_preferido: form.querySelector('input[name="formato_preferido"]:checked')?.value || '',
+      necesita_acompanamiento: form.querySelector('input[name="necesita_acompanamiento"]:checked')?.value || '',
+      tipo_acompanamiento: tipoAcompanamiento.join(', '),
+      timestamp: new Date().toISOString()
+    };
+
+    try {
+      await fetch(ENDPOINT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+      form.style.display = 'none';
+      document.querySelector('.notice').style.display = 'none';
+      document.querySelector('.progress').style.display = 'none';
+      document.getElementById('successView').style.display = 'block';
+    } catch (err) {
+      generalError.style.display = 'block';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Enviar respuesta';
+    }
+  });
+</script>
+
+</body>
+</html>
